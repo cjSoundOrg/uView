@@ -197,8 +197,11 @@
 					this.$emit('input', !this.value);
 				} else {
 					// 如果超出最多可选项，提示
-					if(this.parent && checkedNum >= this.parent.max) {
-						return this.$u.toast(`最多可选${this.parent.max}项`);
+					// if(this.parent && checkedNum >= this.parent.max) {
+					// 	return this.$u.toast(`最多可选${this.parent.max}项`);
+					// }
+					if (this.parent && checkedNum >= this.parent.max) {
+						return this.$emit('tips', this.parent.max)
 					}
 					// 如果原来为未选中状态，需要选中的数量少于父组件中设置的max值，才可以选中
 					this.emitEvent();
