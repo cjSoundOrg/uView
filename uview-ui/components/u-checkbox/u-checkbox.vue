@@ -1,7 +1,8 @@
 <template>
 	<view class="u-checkbox" :style="[checkboxStyle]">
 		<view class="u-checkbox__icon-wrap" @tap="toggle" :class="[iconClass]" :style="[iconStyle]">
-			<u-icon class="u-checkbox__icon-wrap__icon" name="checkbox-mark" :size="checkboxIconSize" :color="iconColor"/>
+			<!-- <u-icon class="u-checkbox__icon-wrap__icon" name="checkbox-mark" :size="checkboxIconSize" :color="iconColor"/> -->
+			<img src="./check.png" />
 		</view>
 		<view class="u-checkbox__label" @tap="onClickLabel" :style="{
 			fontSize: $u.addUnit(labelSize)
@@ -216,6 +217,12 @@
 	@import "../../libs/css/style.components.scss";
 
 	.u-checkbox {
+		.u-checkbox__icon-wrap{
+			img{
+				width:30rpx;
+				height:20rpx;
+			}
+		}
 		/* #ifndef APP-NVUE */
 		display: inline-flex;
 		/* #endif */
