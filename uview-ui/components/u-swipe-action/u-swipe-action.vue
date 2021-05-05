@@ -7,6 +7,7 @@
 				@touchend="touchend"
 				@touchstart="touchstart"
 				direction="horizontal"
+				:damping="damping"
 				:disabled="disabled"
 				:x="moveX"
 				:style="{
@@ -19,7 +20,7 @@
 				>
 					<slot></slot>
 				</view>
-				<view class="u-swipe-del" v-if="showBtn" @tap.stop="btnClick(index)" :style="[btnStyle(item.style)]" v-for="(item, index) in options" :key="index">
+				<view class="u-swipe-del" v-if="showBtn" @tap.stop="btnClick(index)" :style="[btnStyle(item.style)]" v-for="(item, index) in dataList" :key="index">
 					<view class="u-btn-text">{{ item.text }}</view>
 				</view>
 			</movable-view>
@@ -77,6 +78,10 @@ export default {
 			type: Boolean,
 			default: false
 		},
+		damping: {
+			type: Number,
+			default: 50
+		},
 		// 按钮操作参数
 		options: {
 			type: Array,
@@ -105,6 +110,8 @@ export default {
 			movableAreaWidth: 0, // 滑动区域
 			elId: this.$u.guid(), // id，用于通知另外组件关闭时的识别
 			showBtn: false, // 刚开始渲染视图时不显示右边的按钮，避免视图闪动
+			btnWidthTransition:this.btnWidth,
+			dataList:this.$u.deepClone(this.options),
 		};
 	},
 	computed: {
@@ -112,15 +119,15 @@ export default {
 			return this.movableAreaWidth + this.allBtnWidth + 'px';
 		},
 		innerBtnWidth() {
-			return uni.upx2px(this.btnWidth);
+			return uni.upx2px(this.btnWidthTransition);
 		},
 		allBtnWidth() {
-			return uni.upx2px(this.btnWidth) * this.options.length;
+			return uni.upx2px(this.btnWidthTransition) * this.dataList.length;
 		},
 		btnStyle() {
 			return style => {
 				let css = {};
-				style.width = this.btnWidth + 'rpx';
+				style.width = this.btnWidthTransition + 'rpx';
 				return style;
 			};
 		}
@@ -132,8 +139,19 @@ export default {
 		// 点击按钮
 		btnClick(index) {
 			this.status = false;
-			// this.index为点击的几个组件，index为点击某个组件的第几个按钮(options数组的索引)
-			this.$emit('click', this.index, index);
+			if(this.dataList.length === 1){
+				this.btnWidthTransition = 750
+				setTimeout(() => {
+					this.dataList[0].text = '商品を削除しました'
+					this.moveX = -this.allBtnWidth
+					setTimeout(() => {
+						this.dataList = this.$u.deepClone(this.options)
+						this.$emit('click', this.index, index);
+					},600)
+				}, 50);
+			}else{
+				this.$emit('click', this.index, index);
+			}
 		},
 		// movable-view元素移动事件
 		change(e) {

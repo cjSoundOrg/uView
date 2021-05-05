@@ -2,7 +2,7 @@
 	<view class="u-checkbox" :style="[checkboxStyle]">
 		<view class="u-checkbox__icon-wrap" @tap="toggle" :class="[iconClass]" :style="[iconStyle]">
 			<!-- <u-icon class="u-checkbox__icon-wrap__icon" name="checkbox-mark" :size="checkboxIconSize" :color="iconColor"/> -->
-			<img src="./check.png" />
+			<img v-if="value" src="./check.png" />
 		</view>
 		<view class="u-checkbox__label" @tap="onClickLabel" :style="{
 			fontSize: $u.addUnit(labelSize)
